@@ -14,6 +14,12 @@ return [
     |
     */
 
+    'notifications' => [
+        // shared with the provider, used to sign webhooks
+        'webhook_secret' => env('NOTIFICATION_WEBHOOK_SECRET'),
+        'webhook_tolerance_seconds' => (int) env('NOTIFICATION_WEBHOOK_TOLERANCE_SECONDS', 300),
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

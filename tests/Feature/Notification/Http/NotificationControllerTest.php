@@ -7,6 +7,8 @@ namespace Tests\Feature\Notification\Http;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Event;
 use Modules\Notifications\Api\Events\WebhookDeliveredEvent;
+use Modules\Notifications\Infrastructure\Webhooks\WebhookSignature;
+use Modules\Notifications\Presentation\Http\Middleware\VerifyWebhookSignature;
 use Tests\TestCase;
 
 final class NotificationControllerTest extends TestCase
@@ -23,24 +25,26 @@ final class NotificationControllerTest extends TestCase
     {
         Event::fake([WebhookDeliveredEvent::class]);
 
+        $reference = $this->faker->uuid();
         $uri = route('notification.hook', [
             'action' => 'delivered',
-            'reference' => $this->faker->uuid(),
+            'reference' => $reference,
         ]);
 
-        $this->getJson($uri)->assertNoContent();
+        $this->getJson($uri, $this->signedAs('delivered', $reference))->assertNoContent();
 
         Event::assertDispatched(WebhookDeliveredEvent::class);
     }
 
     public function testUnknownActionReturnsNotFound(): void
     {
+        $reference = $this->faker->uuid();
         $uri = route('notification.hook', [
             'action' => 'unknownaction',
-            'reference' => $this->faker->uuid(),
+            'reference' => $reference,
         ]);
 
-        $this->getJson($uri)->assertNotFound();
+        $this->getJson($uri, $this->signedAs('unknownaction', $reference))->assertNotFound();
     }
 
     public function testInvalidReferencePatternReturnsNotFound(): void
@@ -51,5 +55,12 @@ final class NotificationControllerTest extends TestCase
         ]);
 
         $this->getJson($uri)->assertNotFound();
+    }
+
+    /** @return array<string, string> */
+    private function signedAs(string $action, string $reference): array
+    {
+        return [VerifyWebhookSignature::HEADER => $this->app->make(WebhookSignature::class)
+            ->header(action: $action, reference: $reference, timestamp: now()->getTimestamp())];
     }
 }
