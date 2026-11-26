@@ -95,6 +95,7 @@ Tests: `docker compose exec app php artisan test`
 
 ### Changes outside the Invoices module
 
+* `start.sh`: on a fresh clone it first installs `vendor/` with the `composer:2` image. The Docker build context is `vendor/laravel/sail/runtimes/8.5`, so without it `docker compose up --build` fails.
 * `src/Modules/Shared`: base class for business rules, error types mapped to HTTP statuses and a command bus that runs each command in a transaction. `bootstrap/app.php` registers the error mapping, forces JSON responses for `/api/*` and registers the simulate command.
 * Notifications webhook: added a signature check (`X-Notification-Signature`, HMAC-SHA256 with `NOTIFICATION_WEBHOOK_SECRET`), otherwise anyone could mark an invoice as delivered. This changes the given module's contract, so `NotificationControllerTest` now sends signed requests. Its assertions are unchanged.
 * `config/database.php`: SQLite starts transactions with `BEGIN IMMEDIATE` and waits up to 5 s for a lock. Without that, two overlapping commands fail with "database is locked" instead of the second one waiting. I also replaced `PDO::MYSQL_ATTR_SSL_CA` with `Pdo\Mysql::ATTR_SSL_CA`, because the old constant is deprecated in PHP 8.5.
