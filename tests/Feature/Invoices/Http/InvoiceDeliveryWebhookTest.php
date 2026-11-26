@@ -6,7 +6,7 @@ use Modules\Invoices\Domain\ValueObjects\InvoiceId;
 
 // Notifications webhook -> WebhookDeliveredEvent -> Invoices listener.
 
-it('brings the invoice to the client after create, send and a delivery report', function (): void {
+it('goes from draft to sent-to-client after send and a delivery report', function (): void {
     $id = $this->createInvoice();
     $this->sendInvoice($id)->assertNoContent();
     $reference = $this->notifications->sent[0]->resourceId->toString();

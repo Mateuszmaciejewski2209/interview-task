@@ -52,7 +52,7 @@ describe('creating', function (): void {
 });
 
 describe('sending', function (): void {
-    it('hands a complete draft over for sending', function (): void {
+    it('moves a draft with lines to sending', function (): void {
         $invoice = InvoiceMother::draft();
 
         $invoice->send();
@@ -77,7 +77,7 @@ describe('sending', function (): void {
             ->and($invoice->status)->toBe(InvoiceStatus::Draft);
     });
 
-    it('judges the status before the lines', function (): void {
+    it('checks the status before the lines', function (): void {
         $invoice = InvoiceMother::restored(status: InvoiceStatus::Sending, lines: []);
 
         expect($invoice->send(...))->toBreak(InvoiceMustBeDraft::class);

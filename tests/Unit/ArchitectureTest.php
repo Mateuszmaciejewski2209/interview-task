@@ -33,7 +33,7 @@ arch('the shared kernel is framework-free outside its infrastructure')
     ->expect(['Modules\Shared\Domain', 'Modules\Shared\Application'])
     ->not->toUse('Illuminate');
 
-arch('business rules are named, immutable conditions')
+arch('business rules are final readonly classes')
     ->expect('Modules\Invoices\Domain\Rules')
     ->toImplement(BusinessRule::class)
     ->toBeFinal()

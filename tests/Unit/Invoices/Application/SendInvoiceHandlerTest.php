@@ -60,7 +60,7 @@ it('saves the sending status before requesting the notification', function (): v
     expect($effects->getArrayCopy())->toBe(['save:sending', 'deliver']);
 });
 
-it('e-mails nobody when the send loses against a concurrent change', function (): void {
+it('sends no e-mail when saving conflicts', function (): void {
     $invoice = InvoiceMother::draft();
     [$handler, $effects] = sendInvoiceHandler($invoice, new Conflict('Changed concurrently.', 'INVOICE_CHANGED_CONCURRENTLY'));
 
