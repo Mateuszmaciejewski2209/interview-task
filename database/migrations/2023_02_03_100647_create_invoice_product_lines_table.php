@@ -16,12 +16,15 @@ return new class extends Migration
         Schema::create('invoice_product_lines', static function (Blueprint $table): void {
             $table->uuid('id')->primary();
             $table->uuid('invoice_id');
+            // order of lines on the invoice (all lines get the same created_at)
+            $table->unsignedInteger('position');
             $table->string('name');
             $table->integer('unit_price');
             $table->integer('quantity');
             $table->timestamps();
 
             $table->foreign('invoice_id')->references('id')->on('invoices');
+            $table->unique(['invoice_id', 'position']);
         });
     }
 

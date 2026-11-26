@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 use Modules\Shared\Domain\BusinessRuleViolation;
 use PHPUnit\Framework\Assert;
+use Tests\Support\Invoices\InvoicesHttpTestCase;
 use Tests\TestCase;
 
+pest()->extend(TestCase::class)->in('Feature/Invoices/Persistence');
+pest()->extend(InvoicesHttpTestCase::class)->in('Feature/Invoices/Http');
 pest()->extend(TestCase::class)->in('Feature/Notification');
 
 // expect($invoice->send(...))->toBreak(InvoiceMustBeDraft::class)
