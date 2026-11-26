@@ -7,7 +7,7 @@ use PHPUnit\Framework\Assert;
 use Tests\Support\Invoices\InvoicesHttpTestCase;
 use Tests\TestCase;
 
-pest()->extend(TestCase::class)->in('Feature/Invoices/Persistence');
+pest()->extend(TestCase::class)->in('Feature/Invoices/Persistence', 'Feature/Invoices/Concurrency');
 pest()->extend(InvoicesHttpTestCase::class)->in('Feature/Invoices/Http');
 pest()->extend(TestCase::class)->in('Feature/Notification');
 

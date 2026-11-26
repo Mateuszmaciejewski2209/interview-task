@@ -38,7 +38,10 @@ return [
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
-            'busy_timeout' => null,
+            // Take the write lock at BEGIN. In the default deferred mode a concurrent send
+            // fails with "database is locked" instead of waiting for the first one to commit.
+            'transaction_mode' => 'IMMEDIATE',
+            'busy_timeout' => 5000,
             'journal_mode' => null,
             'synchronous' => null,
         ],
